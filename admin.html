@@ -63,6 +63,9 @@
         <h2 class="panel-title">Seleccionar Banner</h2>
         <p class="panel-sub" id="selector-sub">Banners de la página Home</p>
         <div class="banner-selector" id="banner-selector"></div>
+        <div id="btn-nuevo-wrap" style="display:none; margin-top:1rem">
+          <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="agregarBanner()">+ Nuevo banner</button>
+        </div>
       </div>
 
       <!-- FORMULARIO -->
@@ -146,6 +149,7 @@
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
           <button class="btn btn-gold" onclick="guardarBanner()">✓ Guardar cambios</button>
           <button class="btn btn-outline" onclick="descartarCambios()">Descartar</button>
+          <button class="btn btn-danger" id="btn-eliminar" style="display:none;margin-left:auto" onclick="eliminarBanner()">🗑 Eliminar banner</button>
         </div>
       </div>
 
@@ -212,7 +216,7 @@ function intentarLogin() {
   const pass = document.getElementById('input-pass').value;
   const error = document.getElementById('login-error');
   if (CREDENCIALES[user] && CREDENCIALES[user] === pass) {
-    sessionStorage.setItem('hv_admin', user);
+    localStorage.setItem('hv_admin', user);
     mostrarAdmin(user);
   } else {
     error.textContent = 'Usuario o contraseña incorrectos.';
@@ -220,7 +224,7 @@ function intentarLogin() {
   }
 }
 function cerrarSesion() {
-  sessionStorage.removeItem('hv_admin');
+  localStorage.removeItem('hv_admin');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('admin-screen').style.display = 'none';
 }
@@ -249,6 +253,9 @@ function cambiarSeccion(sec) {
   document.getElementById('tab-paquetes').classList.toggle('active', sec === 'paquetes');
   document.getElementById('selector-sub').textContent =
     sec === 'home' ? 'Banners de la página Home' : 'Banners de la página Paquetes';
+  // Mostrar controles solo en paquetes
+  document.getElementById('btn-nuevo-wrap').style.display = sec === 'paquetes' ? 'block' : 'none';
+  document.getElementById('btn-eliminar').style.display = sec === 'paquetes' ? 'inline-flex' : 'none';
   bannerActivo = 0;
   renderSelector();
   seleccionarBanner(0);
@@ -262,23 +269,76 @@ function renderSelector() {
   const cont = document.getElementById('banner-selector');
   cont.innerHTML = '';
   lista.forEach((b, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'banner-option' + (i === bannerActivo ? ' active' : '');
-    btn.onclick = () => seleccionarBanner(i);
+    const div = document.createElement('div');
+    div.className = 'banner-option' + (i === bannerActivo ? ' active' : '');
     const hasImg = b.imagen && b.imagen.startsWith('data:');
-    btn.innerHTML = `
-      <div class="banner-thumb">
+    div.innerHTML = `
+      <div class="banner-thumb" onclick="seleccionarBanner(${i})" style="cursor:pointer">
         ${hasImg ? `<img src="${b.imagen}" alt=""/>` : `<span>${b.emoji}</span>`}
       </div>
-      <div class="banner-option-info">
+      <div class="banner-option-info" onclick="seleccionarBanner(${i})" style="cursor:pointer">
         <div class="banner-option-titulo">${b.titulo}</div>
         <div class="banner-option-destino">${b.destino}</div>
       </div>
-      <span class="banner-num">Banner ${i + 1}</span>
+      <div class="orden-btns">
+        <button onclick="moverBanner(${i}, -1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button onclick="moverBanner(${i}, 1)" ${i === lista.length - 1 ? 'disabled' : ''}>↓</button>
+      </div>
+      <span class="banner-num">${i + 1}</span>
     `;
-    cont.appendChild(btn);
+    cont.appendChild(div);
   });
 }
+
+function moverBanner(idx, dir) {
+  const lista = datos[seccionActiva];
+  const nuevo = idx + dir;
+  if (nuevo < 0 || nuevo >= lista.length) return;
+  [lista[idx], lista[nuevo]] = [lista[nuevo], lista[idx]];
+  bannerActivo = nuevo;
+  try { guardarBanners(datos); mostrarToast('✓ Orden actualizado'); }
+  catch(e) { mostrarToast('❌ Error al guardar', true); }
+  renderSelector();
+}
+
+function agregarBanner() {
+  const nuevo = {
+    id: 'paq_' + Date.now(),
+    titulo: 'Nuevo paquete',
+    destino: 'Destino',
+    precio: '0',
+    moneda: 'ARS',
+    descripcion_corta: '',
+    descripcion_larga: '',
+    duracion: '',
+    imagen: '',
+    galeria: [],
+    color: '#1a3a4a',
+    emoji: '🌍'
+  };
+  datos.paquetes.push(nuevo);
+  bannerActivo = datos.paquetes.length - 1;
+  try { guardarBanners(datos); }
+  catch(e) { mostrarToast('❌ Error al guardar', true); return; }
+  renderSelector();
+  seleccionarBanner(bannerActivo);
+  mostrarToast('✓ Nuevo banner creado — completá los datos y guardá');
+}
+
+function eliminarBanner() {
+  if (datos.paquetes.length <= 1) {
+    mostrarToast('❌ Debe haber al menos un banner', true);
+    return;
+  }
+  if (!confirm('¿Eliminar este banner? Esta acción no se puede deshacer.')) return;
+  datos.paquetes.splice(bannerActivo, 1);
+  bannerActivo = Math.max(0, bannerActivo - 1);
+  try { guardarBanners(datos); mostrarToast('✓ Banner eliminado'); }
+  catch(e) { mostrarToast('❌ Error al guardar', true); return; }
+  renderSelector();
+  seleccionarBanner(bannerActivo);
+}
+
 
 function seleccionarBanner(idx) {
   bannerActivo = idx;
@@ -537,7 +597,7 @@ function mostrarToast(msg, error = false) {
 // =============================================
 // ARRANQUE
 // =============================================
-const sesion = sessionStorage.getItem('hv_admin');
+const sesion = localStorage.getItem('hv_admin');
 if (sesion) mostrarAdmin(sesion);
 
 </script>
