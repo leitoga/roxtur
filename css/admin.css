@@ -222,9 +222,22 @@ body {
 .banner-option-destino { font-size: 0.75rem; color: var(--gris2); margin-top: 0.1rem; }
 .banner-num {
   font-size: 0.7rem; color: var(--gris); background: var(--panel2);
-  padding: 0.15rem 0.5rem; border-radius: 100px; flex-shrink: 0;
+  padding: 0.15rem 0.5rem; border-radius: 100px; flex-shrink: 0; cursor: pointer;
 }
 .banner-option.active .banner-num { background: var(--gold); color: var(--negro); }
+
+.orden-btns {
+  display: flex; flex-direction: column; gap: 2px; flex-shrink: 0;
+}
+.orden-btns button {
+  background: var(--panel2); border: 1px solid var(--borde);
+  color: var(--gris2); border-radius: 5px;
+  width: 26px; height: 24px; font-size: 0.8rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; padding: 0;
+}
+.orden-btns button:hover:not(:disabled) { background: var(--gold); color: var(--negro); border-color: var(--gold); }
+.orden-btns button:disabled { opacity: 0.2; cursor: not-allowed; }
 
 /* ===========================
    UPLOAD IMAGEN PRINCIPAL

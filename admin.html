@@ -262,25 +262,48 @@ function renderSelector() {
   const cont = document.getElementById('banner-selector');
   cont.innerHTML = '';
   lista.forEach((b, i) => {
-    const btn = document.createElement('button');
+    const btn = document.createElement('div');
     btn.className = 'banner-option' + (i === bannerActivo ? ' active' : '');
-    btn.onclick = () => seleccionarBanner(i);
+
     const hasImg = b.imagen && b.imagen.startsWith('data:');
     btn.innerHTML = `
-      <div class="banner-thumb">
-        ${hasImg ? `<img src="${b.imagen}" alt=""/>` : `<span>${b.emoji}</span>`}
+      <div class="banner-thumb" onclick="seleccionarBanner(${i})">
+        ${hasImg ? `<img src="${b.imagen}" alt=""/>` : `<span>${b.emoji || '🌍'}</span>`}
       </div>
-      <div class="banner-option-info">
+      <div class="banner-option-info" onclick="seleccionarBanner(${i})" style="cursor:pointer">
         <div class="banner-option-titulo">${b.titulo}</div>
         <div class="banner-option-destino">${b.destino}</div>
       </div>
-      <span class="banner-num">Banner ${i + 1}</span>
+      <div class="orden-btns">
+        <button onclick="moverBanner(${i}, -1)" ${i === 0 ? 'disabled' : ''} title="Subir">↑</button>
+        <button onclick="moverBanner(${i}, 1)" ${i === lista.length - 1 ? 'disabled' : ''} title="Bajar">↓</button>
+      </div>
+      <span class="banner-num" onclick="seleccionarBanner(${i})">${i + 1}</span>
     `;
     cont.appendChild(btn);
   });
 }
 
-function seleccionarBanner(idx) {
+function moverBanner(idx, direccion) {
+  const lista = datos[seccionActiva];
+  const nuevoIdx = idx + direccion;
+  if (nuevoIdx < 0 || nuevoIdx >= lista.length) return;
+
+  // Intercambiar
+  [lista[idx], lista[nuevoIdx]] = [lista[nuevoIdx], lista[idx]];
+
+  // Seguir al banner movido
+  bannerActivo = nuevoIdx;
+
+  try {
+    guardarBanners(datos);
+  } catch(e) {
+    mostrarToast('❌ Error al guardar el orden', true);
+  }
+
+  renderSelector();
+  mostrarToast('✓ Orden actualizado');
+}
   bannerActivo = idx;
   imagenTemporal = null;
 
