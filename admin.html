@@ -385,7 +385,7 @@ function cargarImagenPrincipal(event) {
       document.getElementById('img-change-hint').style.display = 'block';
       actualizarPreview();
       mostrarToast('✓ Imagen lista — recordá guardar los cambios');
-    } catch {
+    } catch(err) {
       mostrarToast('❌ No se pudo procesar la imagen. Intentá con otra.', true);
     }
   };
@@ -437,7 +437,7 @@ function cargarGaleria(event) {
         const comprimida = await comprimirImagen(e.target.result, 1000, 700, 0.75);
         galeriaTemporal.push(comprimida);
         cargadas++;
-      } catch {
+      } catch(err) {
         errores++;
       }
       if (cargadas + errores === aCargar.length) {
