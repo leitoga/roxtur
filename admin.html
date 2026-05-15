@@ -63,11 +63,10 @@
         <h2 class="panel-title">Seleccionar Banner</h2>
         <p class="panel-sub" id="selector-sub">Banners de la página Home</p>
         <div class="banner-selector" id="banner-selector"></div>
-        <div id="btn-nuevo-wrap" style="display:none; margin-top:1rem">
+        <div id="btn-nuevo-wrap" style="display:none;margin-top:1rem">
           <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="agregarBanner()">+ Nuevo banner</button>
         </div>
       </div>
-
       <!-- FORMULARIO -->
       <div class="panel">
         <h2 class="panel-title">Editar Banner</h2>
@@ -149,7 +148,7 @@
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
           <button class="btn btn-gold" onclick="guardarBanner()">✓ Guardar cambios</button>
           <button class="btn btn-outline" onclick="descartarCambios()">Descartar</button>
-          <button class="btn btn-danger" id="btn-eliminar" style="display:none;margin-left:auto" onclick="eliminarBanner()">🗑 Eliminar banner</button>
+          <button class="btn btn-danger" id="btn-eliminar" style="display:none;margin-left:auto" onclick="eliminarBanner()">🗑 Eliminar</button>
         </div>
       </div>
 
@@ -253,7 +252,6 @@ function cambiarSeccion(sec) {
   document.getElementById('tab-paquetes').classList.toggle('active', sec === 'paquetes');
   document.getElementById('selector-sub').textContent =
     sec === 'home' ? 'Banners de la página Home' : 'Banners de la página Paquetes';
-  // Mostrar controles solo en paquetes
   document.getElementById('btn-nuevo-wrap').style.display = sec === 'paquetes' ? 'block' : 'none';
   document.getElementById('btn-eliminar').style.display = sec === 'paquetes' ? 'inline-flex' : 'none';
   bannerActivo = 0;
@@ -281,8 +279,8 @@ function renderSelector() {
         <div class="banner-option-destino">${b.destino}</div>
       </div>
       <div class="orden-btns">
-        <button onclick="moverBanner(${i}, -1)" ${i === 0 ? 'disabled' : ''}>↑</button>
-        <button onclick="moverBanner(${i}, 1)" ${i === lista.length - 1 ? 'disabled' : ''}>↓</button>
+        <button onclick="moverBanner(${i},-1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button onclick="moverBanner(${i},1)" ${i === lista.length-1 ? 'disabled' : ''}>↓</button>
       </div>
       <span class="banner-num">${i + 1}</span>
     `;
@@ -302,7 +300,7 @@ function moverBanner(idx, dir) {
 }
 
 function agregarBanner() {
-  const nuevo = {
+  datos.paquetes.push({
     id: 'paq_' + Date.now(),
     titulo: 'Nuevo paquete',
     destino: 'Destino',
@@ -315,8 +313,7 @@ function agregarBanner() {
     galeria: [],
     color: '#1a3a4a',
     emoji: '🌍'
-  };
-  datos.paquetes.push(nuevo);
+  });
   bannerActivo = datos.paquetes.length - 1;
   try { guardarBanners(datos); }
   catch(e) { mostrarToast('❌ Error al guardar', true); return; }
@@ -327,10 +324,9 @@ function agregarBanner() {
 
 function eliminarBanner() {
   if (datos.paquetes.length <= 1) {
-    mostrarToast('❌ Debe haber al menos un banner', true);
-    return;
+    mostrarToast('❌ Debe haber al menos un banner', true); return;
   }
-  if (!confirm('¿Eliminar este banner? Esta acción no se puede deshacer.')) return;
+  if (!confirm('¿Eliminar este banner? No se puede deshacer.')) return;
   datos.paquetes.splice(bannerActivo, 1);
   bannerActivo = Math.max(0, bannerActivo - 1);
   try { guardarBanners(datos); mostrarToast('✓ Banner eliminado'); }
@@ -338,7 +334,6 @@ function eliminarBanner() {
   renderSelector();
   seleccionarBanner(bannerActivo);
 }
-
 
 function seleccionarBanner(idx) {
   bannerActivo = idx;
