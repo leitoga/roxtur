@@ -212,7 +212,7 @@ function intentarLogin() {
   const pass = document.getElementById('input-pass').value;
   const error = document.getElementById('login-error');
   if (CREDENCIALES[user] && CREDENCIALES[user] === pass) {
-    sessionStorage.setItem('hv_admin', user);
+    localStorage.setItem('hv_admin', user);
     mostrarAdmin(user);
   } else {
     error.textContent = 'Usuario o contraseña incorrectos.';
@@ -220,7 +220,7 @@ function intentarLogin() {
   }
 }
 function cerrarSesion() {
-  sessionStorage.removeItem('hv_admin');
+  localStorage.removeItem('hv_admin');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('admin-screen').style.display = 'none';
 }
@@ -560,7 +560,7 @@ function mostrarToast(msg, error = false) {
 // =============================================
 // ARRANQUE
 // =============================================
-const sesion = sessionStorage.getItem('hv_admin');
+const sesion = localStorage.getItem('hv_admin');
 if (sesion) mostrarAdmin(sesion);
 
 </script>
