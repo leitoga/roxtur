@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Horizonte Viajes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css"/>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><span>✦</span> Horizonte <em>Viajes</em></div>
+    <span class="login-badge">Panel de Administración</span>
+    <div class="form-group">
+      <label>Usuario</label>
+      <input type="text" id="input-user" placeholder="admin" autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="input-pass" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <p class="login-error" id="login-error"></p>
+    <button class="btn btn-gold btn-full" style="margin-top:1rem" onclick="intentarLogin()">Ingresar →</button>
+    <p style="font-size:0.72rem;color:#555;margin-top:1.5rem;line-height:1.6">
+      Usuario: <strong style="color:#999">admin</strong> &nbsp;/&nbsp; Contraseña: <strong style="color:#999">viajes2025</strong>
+    </p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+
+  <div class="admin-topbar">
+    <div style="display:flex;align-items:center;gap:0.75rem">
+      <div class="topbar-logo"><span>✦</span> Horizonte <em>Viajes</em></div>
+      <span class="topbar-badge">Admin</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-user" id="topbar-user"></span>
+      <a href="index.html" class="btn btn-outline" style="padding:0.5rem 1.1rem;font-size:0.8rem" target="_blank">← Ver web</a>
+      <button class="btn btn-danger" style="padding:0.5rem 1.1rem;font-size:0.8rem" onclick="cerrarSesion()">Salir</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="seccion-tabs">
+    <button class="tab-btn active" id="tab-home" onclick="cambiarSeccion('home')">🏠 Home (3 banners)</button>
+    <button class="tab-btn" id="tab-paquetes" onclick="cambiarSeccion('paquetes')">📦 Paquetes (3 banners)</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- COL IZQUIERDA -->
+    <div>
+
+      <!-- SELECTOR -->
+      <div class="panel">
+        <h2 class="panel-title">Seleccionar Banner</h2>
+        <p class="panel-sub" id="selector-sub">Banners de la página Home</p>
+        <div class="banner-selector" id="banner-selector"></div>
+      </div>
+
+      <!-- FORMULARIO -->
+      <div class="panel">
+        <h2 class="panel-title">Editar Banner</h2>
+        <p class="panel-sub">Los cambios se ven en la preview al instante</p>
+
+        <!-- IMAGEN PRINCIPAL -->
+        <div class="form-group">
+          <label>Imagen principal (banner)</label>
+          <div class="img-upload-area" id="upload-area">
+            <input type="file" id="input-imagen" accept="image/*" onchange="cargarImagenPrincipal(event)"/>
+            <img class="img-preview" id="img-preview" alt="Preview"/>
+            <div class="img-placeholder">
+              <div class="img-icon">🖼️</div>
+              <p><strong>Hacé clic para seleccionar</strong><br/>JPG, PNG, WEBP — recomendado 1200×800px</p>
+            </div>
+          </div>
+          <p class="img-change-hint" id="img-change-hint" style="display:none">Hacé clic en la imagen para cambiarla</p>
+        </div>
+
+        <hr class="panel-divider"/>
+
+        <!-- DATOS BÁSICOS -->
+        <div class="form-group">
+          <label>Título del paquete</label>
+          <input type="text" id="f-titulo" placeholder="Ej: Bariloche Mágico" oninput="actualizarPreview()"/>
+        </div>
+        <div class="form-group">
+          <label>Destino / Región</label>
+          <input type="text" id="f-destino" placeholder="Ej: Patagonia Argentina" oninput="actualizarPreview()"/>
+        </div>
+        <div class="form-group">
+          <label>Descripción corta <span style="color:#666;font-size:0.7rem;font-weight:300">(se muestra en el banner)</span></label>
+          <textarea id="f-desc-corta" placeholder="Descripción breve para el banner..." rows="3" oninput="actualizarPreview()"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Descripción larga <span style="color:#666;font-size:0.7rem;font-weight:300">(se muestra en la página de detalle)</span></label>
+          <textarea id="f-desc-larga" placeholder="Descripción completa del paquete, itinerario, qué incluye..." rows="7"></textarea>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label>Precio</label>
+            <input type="text" id="f-precio" placeholder="185.000" oninput="actualizarPreview()"/>
+          </div>
+          <div class="form-group">
+            <label>Moneda</label>
+            <select id="f-moneda" onchange="actualizarPreview()">
+              <option value="ARS">ARS — Pesos</option>
+              <option value="USD">USD — Dólares</option>
+              <option value="EUR">EUR — Euros</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Duración</label>
+          <input type="text" id="f-duracion" placeholder="Ej: 7 noches" oninput="actualizarPreview()"/>
+        </div>
+
+        <hr class="panel-divider"/>
+
+        <!-- GALERÍA -->
+        <div class="form-group">
+          <label>
+            Galería de fotos
+            <span style="color:#666;font-size:0.7rem;font-weight:300">(se muestran en el detalle del producto)</span>
+          </label>
+
+          <div class="galeria-upload-area">
+            <input type="file" id="input-galeria" accept="image/*" multiple onchange="cargarGaleria(event)"/>
+            <p><strong>+ Agregar fotos</strong> — podés seleccionar varias a la vez</p>
+          </div>
+
+          <div class="galeria-admin-grid" id="galeria-admin-grid"></div>
+          <p class="galeria-count" id="galeria-count"></p>
+        </div>
+
+        <hr class="panel-divider"/>
+
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="guardarBanner()">✓ Guardar cambios</button>
+          <button class="btn btn-outline" onclick="descartarCambios()">Descartar</button>
+        </div>
+      </div>
+
+    </div><!-- /col izq -->
+
+    <!-- COL DERECHA: preview -->
+    <div class="preview-wrap">
+      <div class="panel" style="margin-bottom:1rem">
+        <h2 class="panel-title">Preview del banner</h2>
+        <p class="panel-sub">Vista previa en tiempo real</p>
+      </div>
+
+      <div class="banner-preview-card" id="preview-card">
+        <div class="preview-bg" id="preview-bg"></div>
+        <div class="preview-no-img" id="preview-emoji">🌍</div>
+        <div class="preview-overlay"></div>
+        <div class="preview-body">
+          <span class="preview-destino" id="p-destino">Destino</span>
+          <h3 class="preview-titulo" id="p-titulo">Título</h3>
+          <p class="preview-desc" id="p-desc">Descripción corta del paquete.</p>
+          <div class="preview-footer">
+            <div class="preview-precio">
+              <span class="preview-desde">desde</span>
+              <span class="preview-monto" id="p-precio">$0</span>
+              <span class="preview-moneda" id="p-moneda">ARS</span>
+            </div>
+            <span class="preview-duracion" id="p-duracion">— noches</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1rem">
+        <p style="font-size:0.78rem;color:#666;line-height:1.7">
+          💡 <strong style="color:#999">Tip:</strong> Hacé clic en <em style="color:#c9a84c">Guardar</em> y los cambios se reflejan en la home y en la página de detalle automáticamente.<br/><br/>
+          La <strong style="color:#999">descripción larga</strong> y la <strong style="color:#999">galería</strong> solo se ven al entrar al producto.
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /admin-body -->
+</div><!-- /admin-screen -->
+
+<div class="toast" id="toast"></div>
+
+<script src="js/banners.js"></script>
+<script>
+
+// =============================================
+// CREDENCIALES
+// =============================================
+const CREDENCIALES = { admin: 'viajes2025' };
+
+let datos = { home: [], paquetes: [] };
+let seccionActiva = 'home';
+let bannerActivo = 0;
+let imagenTemporal = null;
+let galeriaTemporal = []; // copia de la galería en edición
+
+// =============================================
+// LOGIN
+// =============================================
+function intentarLogin() {
+  const user = document.getElementById('input-user').value.trim();
+  const pass = document.getElementById('input-pass').value;
+  const error = document.getElementById('login-error');
+  if (CREDENCIALES[user] && CREDENCIALES[user] === pass) {
+    sessionStorage.setItem('hv_admin', user);
+    mostrarAdmin(user);
+  } else {
+    error.textContent = 'Usuario o contraseña incorrectos.';
+    document.getElementById('input-pass').value = '';
+  }
+}
+function cerrarSesion() {
+  sessionStorage.removeItem('hv_admin');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-screen').style.display = 'none';
+}
+['input-user','input-pass'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') intentarLogin(); });
+});
+
+// =============================================
+// INICIO
+// =============================================
+async function mostrarAdmin(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').style.display = 'block';
+  document.getElementById('topbar-user').textContent = '👤 ' + user;
+  datos = await cargarBanners();
+  renderSelector();
+  seleccionarBanner(0);
+}
+
+// =============================================
+// TABS
+// =============================================
+function cambiarSeccion(sec) {
+  seccionActiva = sec;
+  document.getElementById('tab-home').classList.toggle('active', sec === 'home');
+  document.getElementById('tab-paquetes').classList.toggle('active', sec === 'paquetes');
+  document.getElementById('selector-sub').textContent =
+    sec === 'home' ? 'Banners de la página Home' : 'Banners de la página Paquetes';
+  bannerActivo = 0;
+  renderSelector();
+  seleccionarBanner(0);
+}
+
+// =============================================
+// SELECTOR
+// =============================================
+function renderSelector() {
+  const lista = datos[seccionActiva];
+  const cont = document.getElementById('banner-selector');
+  cont.innerHTML = '';
+  lista.forEach((b, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'banner-option' + (i === bannerActivo ? ' active' : '');
+    btn.onclick = () => seleccionarBanner(i);
+    const hasImg = b.imagen && b.imagen.startsWith('data:');
+    btn.innerHTML = `
+      <div class="banner-thumb">
+        ${hasImg ? `<img src="${b.imagen}" alt=""/>` : `<span>${b.emoji}</span>`}
+      </div>
+      <div class="banner-option-info">
+        <div class="banner-option-titulo">${b.titulo}</div>
+        <div class="banner-option-destino">${b.destino}</div>
+      </div>
+      <span class="banner-num">Banner ${i + 1}</span>
+    `;
+    cont.appendChild(btn);
+  });
+}
+
+function seleccionarBanner(idx) {
+  bannerActivo = idx;
+  imagenTemporal = null;
+
+  document.querySelectorAll('.banner-option').forEach((el, i) => el.classList.toggle('active', i === idx));
+
+  const b = datos[seccionActiva][idx];
+  document.getElementById('f-titulo').value = b.titulo;
+  document.getElementById('f-destino').value = b.destino;
+  document.getElementById('f-desc-corta').value = b.descripcion_corta || '';
+  document.getElementById('f-desc-larga').value = b.descripcion_larga || '';
+  document.getElementById('f-precio').value = b.precio;
+  document.getElementById('f-moneda').value = b.moneda;
+  document.getElementById('f-duracion').value = b.duracion;
+
+  // imagen principal
+  const area = document.getElementById('upload-area');
+  const prev = document.getElementById('img-preview');
+  const hint = document.getElementById('img-change-hint');
+  if (b.imagen && b.imagen.startsWith('data:')) {
+    prev.src = b.imagen; area.classList.add('has-image'); hint.style.display = 'block';
+  } else {
+    prev.src = ''; area.classList.remove('has-image'); hint.style.display = 'none';
+  }
+
+  // galería
+  galeriaTemporal = [...(b.galeria || [])];
+  renderGaleriaAdmin();
+  actualizarPreview();
+}
+
+// =============================================
+// COMPRESIÓN DE IMAGEN (resiza y baja calidad)
+// maxW/maxH: tamaño máximo en px, quality: 0-1
+// =============================================
+function comprimirImagen(dataUrl, maxW, maxH, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
+}
+
+// =============================================
+// IMAGEN PRINCIPAL
+// =============================================
+function cargarImagenPrincipal(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    mostrarToast('❌ El archivo no es una imagen válida', true);
+    event.target.value = ''; return;
+  }
+  if (file.size > 15 * 1024 * 1024) {
+    mostrarToast(`❌ La imagen pesa ${(file.size/1024/1024).toFixed(1)}MB — máximo 15MB`, true);
+    event.target.value = ''; return;
+  }
+
+  mostrarToast('⏳ Procesando imagen...');
+
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      // Comprimir a máx 1200x800, calidad 80%
+      const comprimida = await comprimirImagen(e.target.result, 1200, 800, 0.80);
+      imagenTemporal = comprimida;
+      const prev = document.getElementById('img-preview');
+      const area = document.getElementById('upload-area');
+      prev.src = imagenTemporal;
+      area.classList.add('has-image');
+      document.getElementById('img-change-hint').style.display = 'block';
+      actualizarPreview();
+      mostrarToast('✓ Imagen lista — recordá guardar los cambios');
+    } catch {
+      mostrarToast('❌ No se pudo procesar la imagen. Intentá con otra.', true);
+    }
+  };
+  reader.onerror = () => {
+    mostrarToast('❌ Error al leer el archivo.', true);
+    event.target.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+// =============================================
+// GALERÍA
+// =============================================
+function cargarGaleria(event) {
+  const files = Array.from(event.target.files);
+  const max = 8;
+  const disponible = max - galeriaTemporal.length;
+
+  if (disponible <= 0) { mostrarToast('Máximo 8 fotos en la galería', true); return; }
+
+  // Filtrar solo imágenes
+  const soloImagenes = files.filter(f => f.type.startsWith('image/'));
+  if (soloImagenes.length < files.length) {
+    mostrarToast(`⚠️ ${files.length - soloImagenes.length} archivo(s) ignorado(s) — no son imágenes`, true);
+  }
+
+  // Filtrar las que pesan demasiado
+  const validas = soloImagenes.filter(f => {
+    if (f.size > 10 * 1024 * 1024) {
+      mostrarToast(`❌ "${f.name}" pesa más de 10MB y fue omitida`, true);
+      return false;
+    }
+    return true;
+  });
+
+  if (validas.length === 0) return;
+
+  const aCargar = validas.slice(0, disponible);
+  if (validas.length > disponible) mostrarToast(`Solo se agregarán ${disponible} fotos (máximo 8)`, true);
+
+  let cargadas = 0;
+  let errores = 0;
+
+  aCargar.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        // Comprimir fotos de galería a máx 1000x700, calidad 75%
+        const comprimida = await comprimirImagen(e.target.result, 1000, 700, 0.75);
+        galeriaTemporal.push(comprimida);
+        cargadas++;
+      } catch {
+        errores++;
+      }
+      if (cargadas + errores === aCargar.length) {
+        renderGaleriaAdmin();
+        if (errores > 0) mostrarToast(`⚠️ ${errores} foto(s) no se pudieron cargar`, true);
+        else mostrarToast(`✓ ${cargadas} foto(s) agregada(s) a la galería`);
+      }
+    };
+    reader.onerror = () => {
+      errores++;
+      if (cargadas + errores === aCargar.length) {
+        renderGaleriaAdmin();
+        mostrarToast(`❌ Error al leer "${file.name}"`, true);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+
+  event.target.value = '';
+}
+
+function eliminarFotoGaleria(idx) {
+  galeriaTemporal.splice(idx, 1);
+  renderGaleriaAdmin();
+}
+
+function renderGaleriaAdmin() {
+  const grid = document.getElementById('galeria-admin-grid');
+  const count = document.getElementById('galeria-count');
+  grid.innerHTML = '';
+
+  galeriaTemporal.forEach((src, i) => {
+    const item = document.createElement('div');
+    item.className = 'galeria-admin-item';
+    item.innerHTML = `
+      <img src="${src}" alt="Foto ${i+1}"/>
+      <button onclick="eliminarFotoGaleria(${i})" title="Eliminar">✕</button>
+    `;
+    grid.appendChild(item);
+  });
+
+  count.textContent = galeriaTemporal.length > 0
+    ? `${galeriaTemporal.length} foto${galeriaTemporal.length > 1 ? 's' : ''} en la galería`
+    : '';
+}
+
+// =============================================
+// PREVIEW
+// =============================================
+function actualizarPreview() {
+  const b = datos[seccionActiva][bannerActivo];
+  document.getElementById('p-titulo').textContent = document.getElementById('f-titulo').value || 'Título';
+  document.getElementById('p-destino').textContent = document.getElementById('f-destino').value || 'Destino';
+  document.getElementById('p-desc').textContent = document.getElementById('f-desc-corta').value || 'Descripción corta.';
+  document.getElementById('p-precio').textContent = '$' + (document.getElementById('f-precio').value || '0');
+  document.getElementById('p-moneda').textContent = document.getElementById('f-moneda').value;
+  document.getElementById('p-duracion').textContent = document.getElementById('f-duracion').value || '— noches';
+
+  const bg = document.getElementById('preview-bg');
+  const emoji = document.getElementById('preview-emoji');
+  const imgSrc = imagenTemporal || (b.imagen?.startsWith('data:') ? b.imagen : null);
+
+  if (imgSrc) {
+    bg.style.cssText = `position:absolute;inset:0;background-image:url('${imgSrc}');background-size:cover;background-position:center;`;
+    emoji.style.display = 'none';
+  } else {
+    bg.style.cssText = `position:absolute;inset:0;background:${b.color || '#1a2a3a'};`;
+    emoji.style.display = 'flex';
+    emoji.textContent = b.emoji || '🌍';
+  }
+}
+
+// =============================================
+// GUARDAR
+// =============================================
+function guardarBanner() {
+  const b = datos[seccionActiva][bannerActivo];
+
+  b.titulo = document.getElementById('f-titulo').value.trim() || b.titulo;
+  b.destino = document.getElementById('f-destino').value.trim() || b.destino;
+  b.descripcion_corta = document.getElementById('f-desc-corta').value.trim() || b.descripcion_corta;
+  b.descripcion_larga = document.getElementById('f-desc-larga').value.trim() || b.descripcion_larga;
+  b.precio = document.getElementById('f-precio').value.trim() || b.precio;
+  b.moneda = document.getElementById('f-moneda').value;
+  b.duracion = document.getElementById('f-duracion').value.trim() || b.duracion;
+  b.galeria = [...galeriaTemporal];
+
+  if (imagenTemporal) { b.imagen = imagenTemporal; imagenTemporal = null; }
+
+  try {
+    guardarBanners(datos);
+    renderSelector();
+    mostrarToast('✓ Banner guardado correctamente');
+  } catch (e) {
+    if (e.name === 'QuotaExceededError' || e.code === 22) {
+      mostrarToast('❌ No hay espacio suficiente. Eliminá fotos de la galería e intentá de nuevo.', true);
+    } else {
+      mostrarToast('❌ Error al guardar: ' + e.message, true);
+    }
+  }
+}
+
+function descartarCambios() {
+  imagenTemporal = null;
+  seleccionarBanner(bannerActivo);
+  mostrarToast('Cambios descartados', true);
+}
+
+// =============================================
+// TOAST
+// =============================================
+function mostrarToast(msg, error = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (error ? ' error' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// =============================================
+// ARRANQUE
+// =============================================
+const sesion = sessionStorage.getItem('hv_admin');
+if (sesion) mostrarAdmin(sesion);
+
+</script>
+</body>
+</html>

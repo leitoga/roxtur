@@ -1,0 +1,90 @@
+{
+  "home": [
+    {
+      "id": "home_1",
+      "titulo": "Bariloche Mágico",
+      "destino": "Patagonia Argentina",
+      "precio": "185.000",
+      "moneda": "ARS",
+      "descripcion_corta": "7 noches con desayuno incluido en hotel boutique con vista al lago Nahuel Huapi.",
+      "descripcion_larga": "Descubrí la magia de la Patagonia argentina en uno de los destinos más soñados del país. Este paquete incluye 7 noches de alojamiento en un exclusivo hotel boutique ubicado a orillas del lago Nahuel Huapi, con vistas panorámicas que te van a dejar sin palabras.\n\nEl desayuno está incluido todos los días, y el paquete incorpora las excursiones más emblemáticas de la región: circuito chico, cerro Catedral en temporada de nieve, y navegación al Bosque de Arrayanes. El personal del hotel habla español y está disponible las 24hs para asistirte en todo lo que necesites.\n\nIdeal para parejas, familias y viajeros solos que buscan naturaleza, aventura y descanso en un entorno único.",
+      "duracion": "7 noches",
+      "imagen": "",
+      "galeria": [],
+      "color": "#1a3a4a",
+      "emoji": "🏔️"
+    },
+    {
+      "id": "home_2",
+      "titulo": "Cancún Todo Incluido",
+      "destino": "México",
+      "precio": "320.000",
+      "moneda": "ARS",
+      "descripcion_corta": "10 noches en resort 5 estrellas frente al mar Caribe. Bebidas y comidas incluidas.",
+      "descripcion_larga": "Viví la experiencia del Caribe mexicano en su máxima expresión. El resort Paradisus Cancún te espera con sus playas de arena blanca y aguas cristalinas turquesas, en un complejo todo incluido de 5 estrellas que no te va a dejar nada que desear.\n\nEl paquete incluye 10 noches de alojamiento en habitación superior vista al jardín, todas las comidas en los 8 restaurantes del complejo, bebidas nacionales e internacionales ilimitadas, acceso a piscinas temáticas, actividades deportivas acuáticas no motorizadas y shows nocturnos.\n\nAdemás podés agregarle opciones como excursiones a Chichén Itzá, Xcaret o Tulum a precios especiales. Vuelos desde Buenos Aires disponibles con salidas todos los sábados.",
+      "duracion": "10 noches",
+      "imagen": "",
+      "galeria": [],
+      "color": "#1a4a3a",
+      "emoji": "🌊"
+    },
+    {
+      "id": "home_3",
+      "titulo": "Torres del Paine",
+      "destino": "Chile",
+      "precio": "420.000",
+      "moneda": "ARS",
+      "descripcion_corta": "8 días trekking guiado en el parque más impresionante de la Patagonia. Equipo incluido.",
+      "descripcion_larga": "Torres del Paine es considerado uno de los parques nacionales más bellos del mundo, y este paquete te lleva al corazón de la Patagonia chilena de la manera más completa posible.\n\nEl circuito incluye 8 días de trekking guiado por las rutas W y O, con guías certificados bilingües que conocen cada rincón del parque. El alojamiento alterna entre refugios de montaña y campamentos con equipamiento completo: carpa, bolsa de dormir y colchoneta están incluidos.\n\nLas comidas durante el trekking están contempladas, al igual que el traslado desde Puerto Natales y el ingreso al parque. El nivel de exigencia es moderado-alto, ideal para personas con algo de experiencia en caminatas. Gruposs reducidos de máximo 8 personas para una experiencia más personalizada.",
+      "duracion": "8 días",
+      "imagen": "",
+      "galeria": [],
+      "color": "#3a1a4a",
+      "emoji": "🌿"
+    }
+  ],
+  "paquetes": [
+    {
+      "id": "paq_1",
+      "titulo": "Cataratas del Iguazú",
+      "destino": "Misiones, Argentina",
+      "precio": "98.000",
+      "moneda": "ARS",
+      "descripcion_corta": "4 noches en uno de los paisajes más impresionantes del planeta. Incluye acceso ambos lados.",
+      "descripcion_larga": "Las Cataratas del Iguazú son uno de los fenómenos naturales más espectaculares del mundo y este paquete te permite vivirlas desde ambos lados: el argentino y el brasileño.\n\nEl alojamiento durante 4 noches es en un hotel 4 estrellas ubicado en Puerto Iguazú, a pocos kilómetros del parque. Las excursiones incluidas son: recorrido por el circuito superior e inferior del lado argentino, visita a la Garganta del Diablo, y excursión de día completo al lado brasileño con transporte incluido.\n\nEl paquete también contempla una navegación en lancha a los pies de las cataratas para los que quieran mojarse un poco más. Las salidas son todos los jueves desde Buenos Aires, con vuelo y traslados al hotel incluidos.",
+      "duracion": "4 noches",
+      "imagen": "",
+      "galeria": [],
+      "color": "#1a4a2a",
+      "emoji": "💧"
+    },
+    {
+      "id": "paq_2",
+      "titulo": "Roma y Toscana",
+      "destino": "Italia",
+      "precio": "1.250.000",
+      "moneda": "ARS",
+      "descripcion_corta": "14 noches recorriendo lo mejor de Italia. Roma, Florencia, Siena y viñedos de la Toscana.",
+      "descripcion_larga": "Italia es uno de esos destinos que hay que vivir al menos una vez en la vida, y este circuito combina la grandeza de Roma con la serenidad incomparable de la Toscana.\n\nEl viaje comienza con 6 noches en Roma, donde vas a recorrer el Coliseo, el Vaticano, la Fontana di Trevi y los mercados históricos del centro. Luego, un tren de alta velocidad te lleva hasta Florencia, base para los siguientes 5 días: galería Uffizi, catedral de Santa Maria del Fiore y excursiones de día a Siena, San Gimignano y los viñedos del Chianti.\n\nLos últimos 3 días son en Venecia, con paseo en góndola y recorrido por las islas de Murano y Burano. El paquete incluye vuelos desde EZE, todos los traslados entre ciudades, alojamiento en hoteles 4 estrellas y desayuno diario. Guía de habla hispana incluida en todas las excursiones.",
+      "duracion": "14 noches",
+      "imagen": "",
+      "galeria": [],
+      "color": "#4a2a1a",
+      "emoji": "🏛️"
+    },
+    {
+      "id": "paq_3",
+      "titulo": "Machu Picchu Express",
+      "destino": "Perú",
+      "precio": "275.000",
+      "moneda": "ARS",
+      "descripcion_corta": "7 días circuito completo Valle Sagrado y ciudadela inca. Tren y entradas incluidas.",
+      "descripcion_larga": "Machu Picchu es uno de los destinos más icónicos de América del Sur, y este paquete te lleva hasta la ciudadela inca de la manera más completa y cómoda posible.\n\nEl itinerario comienza en Cusco, donde pasás 2 noches para aclimatarte a la altura y recorrer la ciudad colonial y sus alrededores (Sacsayhuamán, Qorikancha). Luego, 2 días recorriendo el Valle Sagrado: Pisac, Ollantaytambo y los mercados artesanales locales.\n\nEl punto culminante es la llegada a Aguas Calientes en el tren Vistadome, con vistas panorámicas impresionantes. El día siguiente es para Machu Picchu: entrada incluida, visita guiada de 3 horas por la ciudadela y tiempo libre para explorar a tu ritmo. Opción de subir al Huayna Picchu con costo adicional. El paquete incluye vuelos internacionales, todos los traslados, alojamiento en hoteles seleccionados y guía de habla hispana.",
+      "duracion": "7 días",
+      "imagen": "",
+      "galeria": [],
+      "color": "#3a3a1a",
+      "emoji": "🗿"
+    }
+  ]
+}

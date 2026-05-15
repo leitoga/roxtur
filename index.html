@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horizonte Viajes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">
+    <span class="logo-icon">✦</span>
+    Horizonte <em>Viajes</em>
+  </a>
+  <nav class="nav">
+    <a href="index.html" class="active">Home</a>
+    <a href="paquetes.html">Paquetes</a>
+    <a href="admin.html" class="admin-link">⚙ Admin</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div style="position:relative">
+    <p class="hero-eyebrow">Descubrí el mundo con nosotros</p>
+    <h1 class="hero-title">El viaje de<br/><em>tu vida</em><br/>te espera</h1>
+    <p class="hero-sub">Más de 200 destinos. Precios que sorprenden. Experiencias que no olvidás.</p>
+    <a href="#destinos" class="btn-primary">Ver destinos destacados</a>
+  </div>
+</section>
+
+<section class="seccion" id="destinos">
+  <div class="seccion-header">
+    <span class="seccion-tag">✦ selección de temporada</span>
+    <h2 class="seccion-titulo">Destinos Destacados</h2>
+    <p class="seccion-desc">Los paquetes más elegidos del momento</p>
+  </div>
+  <div class="banners-grid" id="banners-grid"></div>
+
+  <div style="text-align:center; margin-top:3rem">
+    <a href="paquetes.html" class="btn-outline">Ver todos los paquetes →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-logo"><span>✦</span> Horizonte <em>Viajes</em></div>
+  <p class="footer-copy">© 2025 Horizonte Viajes — Todos los derechos reservados</p>
+  <p class="footer-copy" style="margin-top:0.3rem; opacity:0.4">
+    Contenido editable desde <code>admin.html</code>
+  </p>
+</footer>
+
+<script src="js/banners.js"></script>
+<script>
+  async function renderBanners() {
+    const data = await cargarBanners();
+    const grid = document.getElementById('banners-grid');
+    grid.innerHTML = '';
+
+    data.home.forEach(b => {
+      const card = document.createElement('a');
+      card.className = 'banner-card';
+      card.href = `producto.html?id=${b.id}`;
+
+      const hasImg = b.imagen && b.imagen.startsWith('data:');
+
+      card.innerHTML = `
+        <div class="banner-bg" style="${hasImg ? `background-image:url('${b.imagen}')` : `background:${b.color}`}"></div>
+        ${!hasImg ? `<div class="banner-no-img">${b.emoji}</div>` : ''}
+        <div class="banner-overlay"></div>
+        <div class="banner-body">
+          <span class="banner-destino">${b.destino}</span>
+          <h3 class="banner-titulo">${b.titulo}</h3>
+          <p class="banner-desc">${b.descripcion_corta}</p>
+          <div class="banner-footer">
+            <div class="banner-precio">
+              <span class="banner-desde">desde</span>
+              <span class="banner-monto">$${b.precio}</span>
+              <span class="banner-moneda">${b.moneda}</span>
+            </div>
+            <span class="banner-duracion">${b.duracion}</span>
+          </div>
+          <span class="banner-cta">Ver paquete completo →</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  renderBanners();
+</script>
+</body>
+</html>

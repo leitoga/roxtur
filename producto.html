@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalle de paquete — Horizonte Viajes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/producto.css"/>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">
+    <span class="logo-icon">✦</span>
+    Horizonte <em>Viajes</em>
+  </a>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="paquetes.html">Paquetes</a>
+    <a href="admin.html" class="admin-link">⚙ Admin</a>
+  </nav>
+</header>
+
+<!-- Contenido dinámico -->
+<div id="contenido"></div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="cerrarLightbox()">
+  <button class="lightbox-close" onclick="cerrarLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo"><span>✦</span> Horizonte <em>Viajes</em></div>
+  <p class="footer-copy">© 2025 Horizonte Viajes — Todos los derechos reservados</p>
+</footer>
+
+<script src="js/banners.js"></script>
+<script>
+  function abrirLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function cerrarLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  async function renderProducto() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const contenido = document.getElementById('contenido');
+
+    if (!id) {
+      mostrarNotFound(contenido);
+      return;
+    }
+
+    await cargarBanners(); // asegura que el storage esté inicializado
+    const b = getPaqueteById(id);
+
+    if (!b) {
+      mostrarNotFound(contenido);
+      return;
+    }
+
+    // Actualizar título de la pestaña
+    document.title = `${b.titulo} — Horizonte Viajes`;
+
+    const hasImg = b.imagen && b.imagen.startsWith('data:');
+    const origen = id.startsWith('home_') ? 'index.html' : 'paquetes.html';
+    const origenLabel = id.startsWith('home_') ? '← Volver a inicio' : '← Volver a paquetes';
+
+    // Galería
+    const galeriaHTML = (b.galeria && b.galeria.length > 0)
+      ? b.galeria.map((src, i) => `
+          <div class="galeria-img" onclick="abrirLightbox('${src}')">
+            <img src="${src}" alt="Foto ${i + 1} de ${b.titulo}"/>
+          </div>
+        `).join('')
+      : `<p class="galeria-vacia">No hay fotos adicionales cargadas aún.</p>`;
+
+    contenido.innerHTML = `
+      <!-- HERO -->
+      <section class="producto-hero" style="padding-top:72px">
+        <div class="producto-hero-bg" style="${hasImg ? `background-image:url('${b.imagen}')` : `background:${b.color}`}">
+          ${!hasImg ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10rem;opacity:0.08">${b.emoji}</div>` : ''}
+        </div>
+        <div class="producto-hero-overlay"></div>
+        <div class="producto-hero-body">
+          <a href="${origen}" class="back-link">${origenLabel}</a>
+          <span class="producto-destino-tag">${b.destino}</span>
+          <h1 class="producto-titulo">${b.titulo}</h1>
+        </div>
+      </section>
+
+      <!-- CUERPO -->
+      <div class="producto-body">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div>
+          <h2 class="producto-section-title">Sobre este paquete</h2>
+          <p class="producto-descripcion">${b.descripcion_larga || b.descripcion_corta}</p>
+
+          <h2 class="producto-section-title">Galería de fotos</h2>
+          <div class="galeria-grid">${galeriaHTML}</div>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div>
+          <div class="precio-card">
+            <p class="precio-card-label">Precio por persona, desde</p>
+            <p class="precio-card-monto">$${b.precio}</p>
+            <p class="precio-card-moneda">${b.moneda}</p>
+
+            <hr class="precio-card-divider"/>
+
+            <div class="precio-card-dato">
+              <span>Destino</span>
+              <span>${b.destino}</span>
+            </div>
+            <div class="precio-card-dato">
+              <span>Duración</span>
+              <span>${b.duracion}</span>
+            </div>
+
+            <hr class="precio-card-divider"/>
+
+            <a href="mailto:info@horizonteviajes.com?subject=Consulta: ${encodeURIComponent(b.titulo)}" class="btn-consultar">
+              Consultar disponibilidad
+            </a>
+            <p class="precio-card-nota">Te respondemos en menos de 24hs.<br/>Sin cargo por consulta.</p>
+          </div>
+        </div>
+
+      </div>
+    `;
+  }
+
+  function mostrarNotFound(contenido) {
+    contenido.innerHTML = `
+      <div class="not-found" style="padding-top:120px">
+        <div>
+          <p style="font-size:3rem;margin-bottom:1rem">🗺️</p>
+          <h2>Paquete no encontrado</h2>
+          <p>El paquete que buscás no existe o fue eliminado.</p>
+          <a href="index.html" class="btn-primary">Volver al inicio</a>
+        </div>
+      </div>
+    `;
+  }
+
+  renderProducto();
+</script>
+</body>
+</html>
